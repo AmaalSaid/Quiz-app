@@ -4,6 +4,7 @@ const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const answerButtonElement = document.getElementById('answer-button')
 const controls = document.querySelector(".controls")
+const timer = document.getElementById("timer")
 const questions = [
     {
         questions: 'what operation uses * in javascript?',
@@ -34,7 +35,7 @@ const questions = [
         ]
     }
 ]
-let shuffleQuestions, currentQuestionIndex
+let shuffleQuestions, currentQuestionIndex, timerObj,timercount = 20;
 const answerBtnsList = document.querySelectorAll(".btn")
 answerBtnsList.forEach(button => button.addEventListener("click",selectAnswer))
 startButton.addEventListener('click', startGame)
@@ -46,12 +47,21 @@ function startGame() {
     
     questionContainerElement.classList.remove('hide')
     // setNextQuestion()
+    timerObj = setInterval(function(){
+        timer.innerText = "Time Left: "+ timercount;
+        if(timercount>0){
+            timercount--;
+        }else{
+            clearInterval(timerObj);
+            finalScore()
+        }
+    },1000)
     showQuestion()
 }
 
-function setNextQuestion() {
-    resetState()
-    
+function finalScore() {
+  controls.classList.remove("hide")
+questionContainerElement.classList.add("hide")
 }
 
 function showQuestion() {
@@ -84,6 +94,7 @@ function selectAnswer(e) {
         e.target.classList.add('correct')
     } else {
         e.target.classList.add('wrong')
+        timercount-=3;
     }
     
     setTimeout(function(){
@@ -96,21 +107,13 @@ function selectAnswer(e) {
       currentQuestionIndex++;
       showQuestion()
     } else {
-        
+        clearInterval(timerObj)
+        finalScore()
     }
     
     
 }
 
-function setStatusClass(element, correct) {
-    clearStatusclasses(element)
-   
-
-}
-function clearStatusclasses(element) {
-    element.classList.remove('correct')
-    element.classList.remove('wrong')
-}
 
 //const questions = [
 //     {
